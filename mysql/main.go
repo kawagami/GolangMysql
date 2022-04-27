@@ -1,4 +1,4 @@
-package Mysql
+package mysql
 
 import (
 	"database/sql"
@@ -12,22 +12,15 @@ const (
 	DB   = "arrange"
 )
 
-type ComicAuthors struct {
-	Id        string         `json:"id"`
-	Name      string         `json:"name"`
-	CreatedAt string         `json:"created_at"`
-	UpdatedAt sql.NullString `json:"updated_at"`
-}
-
-func SelectAllFrom(tableName string) (dataSlice []string) {
-	sqlOpenString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", USER, PW, IP, DB)
+func SelectAllFrom() (dataSlice []string) {
+	sqlOpenString := fmt.Sprintf("%s:%s@tcp(%s)/%s", USER, PW, IP, DB)
 	db, err := sql.Open("mysql", sqlOpenString)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 	//
-	sqlQuery := fmt.Sprintf("select * from %s", tableName)
+	sqlQuery := fmt.Sprintf("select * from %s", "comic_authors")
 	selectQuery, err := db.Query(sqlQuery)
 	if err != nil {
 		panic(err.Error())
