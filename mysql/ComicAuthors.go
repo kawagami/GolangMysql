@@ -3,6 +3,8 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type ComicAuthors struct {
@@ -37,11 +39,6 @@ func (this *ComicAuthors) Get() []ComicAuthors {
 			panic(err.Error())
 		}
 		slice = append(slice, comicAuthors)
-		// fmt.Println(comicAuthors.Id)
-		// fmt.Println(comicAuthors.Name)
-		// fmt.Println(comicAuthors.CreatedAt)
-		// fmt.Println(comicAuthors.UpdatedAt)
-		// fmt.Println()
 	}
 	//
 	return slice
