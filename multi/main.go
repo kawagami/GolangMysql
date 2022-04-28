@@ -1,24 +1,25 @@
-package main
+package multi
 
 import (
 	"fmt"
-	"time"
 )
 
-func say(word string) {
-	for i := 0; i < 50; i++ {
-		fmt.Println(word, i)
-		time.Sleep(time.Millisecond * 1)
+func WriteData(intChan chan int) {
+	for i := 0; i < 10000; i++ {
+		intChan <- i
+		fmt.Println("write data", i)
 	}
+	close(intChan)
 }
 
-func main() {
-	var word byte = 'A'
-	for i := 0; i < 5; i++ {
-		var input string = string(word)
-		go say(input)
-		word++
+func ReadData(intChan chan int, exitChan chan bool) {
+	for {
+		v, ok := <-intChan
+		if !ok {
+			break
+		}
+		fmt.Println("read", v)
 	}
-	time.Sleep(time.Second * 5)
-	fmt.Println("main end")
+	exitChan <- true
+	close(exitChan)
 }
