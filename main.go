@@ -1,7 +1,8 @@
 package main
 
 import (
-	"mods/multi"
+	"fmt"
+	"mods/multiExam"
 )
 
 const (
@@ -9,15 +10,15 @@ const (
 )
 
 func main() {
-	var data = make(chan int, 5)
-	var flag = make(chan bool, 1)
-	//
-	go multi.WriteData(data)
-	go multi.ReadData(data, flag)
-	//
-	for {
-		if _, ok := <-flag; !ok {
-			break
-		}
+	var numChan = make(chan int, 2000)
+	var resChan = make(chan map[int]int, 2000)
+	var exitChan = make(chan bool, 1)
+	go multiExam.CreateNum(numChan)
+	for i := 0; i < 8; i++ {
+		go multiExam.Calculate(numChan, resChan)
+	}
+	res := multiExam.Sort(resChan, exitChan)
+	for i, v := range res {
+		fmt.Println("index =", i, "value =", v)
 	}
 }
