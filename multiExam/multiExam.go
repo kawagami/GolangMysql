@@ -3,9 +3,10 @@ package multiExam
 import "fmt"
 
 func CreateNum(numChan chan int) {
-	for i := 0; i < 2000; i++ {
+	for i := 1; i <= 2000; i++ {
 		numChan <- i
 	}
+	fmt.Println("CreateNum 結束")
 	close(numChan)
 }
 
@@ -16,23 +17,20 @@ func Calculate(numChan chan int, resChan chan map[int]int, exitChan chan bool) {
 			break
 		}
 		mapValue := 0
-		for i := 1; i <= value; i++ {
+		for i := 0; i <= value; i++ {
 			mapValue += i
 		}
-		fmt.Printf("key = %v value = %v\n", value, mapValue)
+		// fmt.Printf("key = %v value = %v\n", value, mapValue)
 		resValue := map[int]int{value: mapValue}
 		resChan <- resValue
 	}
-	if len(resChan) >= 2000 {
-		exitChan <- true
-		close(resChan)
-		close(exitChan)
-		fmt.Println("有進 IF")
-	}
+	fmt.Println("一個 goroutine 結束")
+	exitChan <- true
 }
 
 func Sort(resChan chan map[int]int, exitChan chan bool) (res [2000]int) {
 	for i, v := range <-resChan {
+		fmt.Printf("key = %v value = %v\n", i, v)
 		res[i] = v
 	}
 	return
