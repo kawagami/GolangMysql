@@ -15,7 +15,12 @@ func main() {
 	var exitChan = make(chan bool, 1)
 	go multiExam.CreateNum(numChan)
 	for i := 0; i < 8; i++ {
-		go multiExam.Calculate(numChan, resChan)
+		go multiExam.Calculate(numChan, resChan, exitChan)
+	}
+	for {
+		if b, _ := <-exitChan; b {
+			break
+		}
 	}
 	res := multiExam.Sort(resChan, exitChan)
 	for i, v := range res {

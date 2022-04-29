@@ -9,7 +9,7 @@ func CreateNum(numChan chan int) {
 	close(numChan)
 }
 
-func Calculate(numChan chan int, resChan chan map[int]int) {
+func Calculate(numChan chan int, resChan chan map[int]int, exitChan chan bool) {
 	for {
 		value, ok := <-numChan
 		if !ok {
@@ -23,7 +23,12 @@ func Calculate(numChan chan int, resChan chan map[int]int) {
 		resValue := map[int]int{value: mapValue}
 		resChan <- resValue
 	}
-	close(resChan)
+	if len(resChan) >= 2000 {
+		exitChan <- true
+		close(resChan)
+		close(exitChan)
+		fmt.Println("有進 IF")
+	}
 }
 
 func Sort(resChan chan map[int]int, exitChan chan bool) (res [2000]int) {
