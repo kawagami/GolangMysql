@@ -29,7 +29,7 @@ func Ofvs() {
 
 }
 
-func WebWithCopy() {
+func WebInfoWithCopy() {
 	text, _ := cb.ReadAll()
 	cmd := "cmd"
 	web1String := fmt.Sprintf("http://www.wnacg.org/search/?q=%s&f=_all&s=create_time_DESC&syn=yes", text)
@@ -41,4 +41,12 @@ func WebWithCopy() {
 	exec.Command(cmd, web1...).Start()
 	exec.Command(cmd, web2...).Start()
 	exec.Command(cmd, web3...).Start()
+}
+
+func VideoInfoWithCopy() {
+	text, _ := cb.ReadAll()
+	cmd := "cmd"
+	web1String := fmt.Sprintf("https://javdb.com/search?q=%s&f=all", text)
+	web1 := []string{"/c", "start", web1String}
+	exec.Command(cmd, web1...).Start()
 }

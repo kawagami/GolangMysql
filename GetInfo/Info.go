@@ -1,12 +1,17 @@
 package GetInfo
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
+
+type VideoCrawler struct {
+	Title string `json:"title"`
+	Path  string `json:"path"`
+}
 
 /*
 遍歷所有層的資料夾和檔案
@@ -33,22 +38,17 @@ func GetAllFile(files *[]string) filepath.WalkFunc {
 /*
 只遍歷下一層的所有資料夾
 */
-func GetDir(pathname string, pathSlice *[]string) error {
-	var tempSlice []string
+func GetDir(pathname string, pathSlice *[]VideoCrawler) error {
+	var tempSlice []VideoCrawler
 	//
 	rd, err := ioutil.ReadDir(pathname)
 	for _, fi := range rd {
-		if fi.IsDir() {
-			// fmt.Printf("是資料夾 %s\n", pathname+"\\"+fi.Name())
-			// fmt.Printf("資料夾名稱 %s\n", fi.Name())
-			// fmt.Println()
-			//
-			tempSlice = append(tempSlice, pathname+"\\"+fi.Name())
-			fmt.Println("get", fi.Name())
-			// GetAllFile(pathname + fi.Name() + "\\")
-		} else {
-			// fmt.Println(fi.Name())
-		}
+		title := strings.TrimSuffix(fi.Name(), ".mp4")
+		title = strings.TrimSuffix(title, ".wmv")
+		title = strings.TrimSuffix(title, ".mkv")
+		data := VideoCrawler{title, pathname + "\\" + fi.Name()}
+		tempSlice = append(tempSlice, data)
+		// fmt.Println("get", fi.Name())
 	}
 	*pathSlice = tempSlice
 	return err

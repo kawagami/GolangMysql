@@ -4,14 +4,22 @@ import (
 	"fmt"
 	"time"
 
-	"mods/cmdsomething"
+	"mods/GetInfo"
 )
 
 func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	cmdsomething.WebWithCopy()
+	path := `C:\waitToArrange`
+	var pathSlice []GetInfo.VideoCrawler
+	err := GetInfo.GetDir(path, &pathSlice)
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range pathSlice {
+		fmt.Printf("title = %v\npath = %v\n\n", v.Title, v.Path)
+	}
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
