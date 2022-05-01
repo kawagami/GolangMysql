@@ -1,6 +1,7 @@
 package videotidyup
 
 import (
+	// "fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -21,7 +22,7 @@ func GetVideos() (res []SimVideo) {
 	}
 	for _, v := range fiSlice {
 		if strings.HasSuffix(v.Name(), ".mp4") {
-			// fmt.Println(v.Name))
+			// fmt.Println(v.Sys))
 			path := root + v.Name()
 			data := SimVideo{Name: v.Name(), Path: path}
 			res = append(res, data)

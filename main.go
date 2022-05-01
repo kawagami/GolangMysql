@@ -2,18 +2,16 @@ package main
 
 import (
 	"fmt"
-	vtu "mods/videotidyup"
 	"time"
+
+	"mods/cmdsomething"
 )
 
 func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	res := vtu.GetVideos()
-	for _, v := range res {
-		fmt.Printf("檔名 = %v\n路徑 = %v\n\n", v.Name, v.Path)
-	}
+	cmdsomething.WebWithCopy()
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
