@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
@@ -22,7 +23,7 @@ func GetVideoInfo(videoName string) (result []string) {
 			firstPath := baseUrl + e.Attr("href")
 			result = append(result, firstPath)
 		}
-		fmt.Println(e.Attr("href"))
+		// fmt.Println(e.Attr("href"))
 	})
 
 	c.OnRequest(func(r *colly.Request) { // iT邦幫忙需要寫這一段 User-Agent才給爬
@@ -58,5 +59,27 @@ func GetVideoInnerInfo(path string) (result []string) {
 
 	c.Visit(path) // Visit 要放最後
 
+	return
+}
+
+func GetActressName(fileTitle string) (actressName string) {
+	paths := GetVideoInfo(fileTitle)
+	if len(paths) > 1 {
+		// 爬第二層
+		datas := GetVideoInnerInfo(paths[0])
+		// 取得沒特定標籤可鎖定的資料並整理
+		if len(datas) > 5 {
+			infoIndex := len(datas) - 1
+			res := strings.Split(datas[infoIndex], "♀")
+			// 清除左右的空白
+			aName := strings.TrimSpace(res[0])
+			actressName = aName
+			// fmt.Println(aName)
+		} else {
+			fmt.Println("取不到內頁資料", fileTitle)
+		}
+	} else {
+		fmt.Println("第一層無資料")
+	}
 	return
 }
