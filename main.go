@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"mods/GetInfo"
+	"mods/crawler"
 	"mods/mysql"
-
-	"github.com/gocolly/colly"
 )
 
 func main() {
@@ -26,22 +26,24 @@ func main() {
 	record := va.Get()
 	fmt.Println(len(record))
 	//
-	c := colly.NewCollector() // 在colly中使用 Collector 這類物件 來做事情
-
-	c.OnResponse(func(r *colly.Response) { // 當Visit訪問網頁後，網頁響應(Response)時候執行的事情
-		fmt.Println(string(r.Body)) // 返回的Response物件r.Body 是[]Byte格式，要再轉成字串
-	})
-
-	c.OnRequest(func(r *colly.Request) { // iT邦幫忙需要寫這一段 User-Agent才給爬
-		r.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36")
-	})
-
-	c.Visit("https://ithelp.ithome.com.tw/users/20125192/ironman/3155") // Visit 要放最後
-
-	//
-	// for _, v := range pathSlice {
-	// 	fmt.Printf("title = %v\npath = %v\n\n", v.Title, v.Path)
-	// }
+	targetName := pathSlice[30].Title
+	paths := crawler.GetVideoInfo(targetName)
+	if len(paths) > 1 {
+		// 爬第二層
+		datas := crawler.GetVideoInnerInfo(paths[0])
+		// 取得沒特定標籤可鎖定的資料並整理
+		if len(datas) > 5 {
+			infoIndex := len(datas) - 1
+			res := strings.Split(datas[infoIndex], "♀")
+			// 清除左右的空白
+			aName := strings.TrimSpace(res[0])
+			fmt.Println(aName)
+		} else {
+			fmt.Println("取不到內頁資料", targetName)
+		}
+	} else {
+		fmt.Println("第一層無資料")
+	}
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
