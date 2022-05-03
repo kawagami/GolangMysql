@@ -65,6 +65,7 @@ func (va *VideoActresses) Exist(fileTitle string) bool {
 	//
 	fileTitleString := fileTitle + "%"
 	sqlQuery := fmt.Sprintf("SELECT * FROM video_actresses WHERE `title` LIKE '%s'", fileTitleString)
+	// panic(sqlQuery)
 	selectQuery, err := db.Query(sqlQuery)
 	if err != nil {
 		panic(err.Error())
@@ -88,7 +89,7 @@ func (va *VideoActresses) Exist(fileTitle string) bool {
 		slice = append(slice, oneRowData)
 	}
 	//
-	return len(slice) > 1
+	return len(slice) > 0
 }
 
 func (va *VideoActresses) Insert(data VideoActresses) {
