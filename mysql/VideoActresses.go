@@ -55,6 +55,42 @@ func (va *VideoActresses) Get() []VideoActresses {
 	return slice
 }
 
+func (va *VideoActresses) Exist(fileTitle string) bool {
+	sqlOpenString := fmt.Sprintf("%s:%s@tcp(%s)/%s", USER, PW, IP, DB)
+	db, err := sql.Open("mysql", sqlOpenString)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+	//
+	fileTitleString := fileTitle + "%"
+	sqlQuery := fmt.Sprintf("SELECT * FROM video_actresses WHERE `title` LIKE '%s'", fileTitleString)
+	selectQuery, err := db.Query(sqlQuery)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer selectQuery.Close()
+	//
+	var slice []VideoActresses
+	for selectQuery.Next() {
+		var oneRowData VideoActresses
+
+		err = selectQuery.Scan(
+			&oneRowData.Id,
+			&oneRowData.Title,
+			&oneRowData.Actress,
+			&oneRowData.CreatedAt,
+			&oneRowData.UpdatedAt,
+		)
+		if err != nil {
+			panic(err.Error())
+		}
+		slice = append(slice, oneRowData)
+	}
+	//
+	return len(slice) > 1
+}
+
 func (va *VideoActresses) Insert(data VideoActresses) {
 	sqlOpenString := fmt.Sprintf("%s:%s@tcp(%s)/%s", USER, PW, IP, DB)
 	db, err := sql.Open("mysql", sqlOpenString)
@@ -116,7 +152,7 @@ func (va *VideoActresses) Where(column, operator, value string) []VideoActresses
 }
 func (va *VideoActresses) Delete(column, operator, value string) {
 	sqlOpenString := fmt.Sprintf("%s:%s@tcp(%s)/%s", USER, PW, IP, DB)
-	db, err := sql.Open("mysql", sqlOpenString)
+	db, _ := sql.Open("mysql", sqlOpenString)
 	sqlQuery := fmt.Sprintf("delete from video_actresses where `%s` %s '%s'", column, operator, value)
 	result, err := db.Exec(sqlQuery)
 	if err != nil {

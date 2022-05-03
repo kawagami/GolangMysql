@@ -21,8 +21,8 @@ func main() {
 	//
 	// 取得 DB 資料
 	var va mysql.VideoActresses
-	record := va.Get()
-	fmt.Println(len(record))
+	// record := va.Get()
+	fmt.Println("檢查", va.Exist(pathSlice[0].Title))
 	// 檢查 DB 資料存在與否的邏輯等待思慮周全
 	// 可能在 VideoActresses 增加使用 sql 檢查存在的方法
 	// for _, v := range pathSlice {
