@@ -41,8 +41,10 @@ func CrawlerActressName() {
 			// 避免過度 request 被擋
 			fmt.Println("待機 5 秒")
 			time.Sleep(time.Second * 5)
-		} else {
+		} else if regexTitle != "" {
 			fmt.Println("DB 有", regexTitle, "的資料")
+		} else {
+			fmt.Println("不符合影片檔名格式", video.Title)
 		}
 	}
 }
