@@ -9,22 +9,23 @@ import (
 	"mods/mysql"
 )
 
-func CrawlerActressName() {
-	path := `C:\waitToArrange`
-	var pathSlice []GetInfo.VideoCrawler
-	err := GetInfo.GetDir(path, &pathSlice)
-	if err != nil {
-		panic(err)
-	}
-	//
+func CrawlerActressName(path string) {
+	// path := `C:\waitToArrange`
+	// path := `D:\`
+	pathSlice := GetInfo.GetFileNumberFromDir(path)
+	// err := GetInfo.GetDir(path, &pathSlice)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// //
 	// 取得 DB 資料
 	var va mysql.VideoActresses
 	// regex
 	pattern := `^[a-zA-Z]{2,6}-[0-9]{2,6}`
 	re, _ := regexp.Compile(pattern)
 	//
-	for _, video := range pathSlice {
-		regexTitle := re.FindString(video.Title)
+	for _, videoNumber := range pathSlice {
+		regexTitle := re.FindString(videoNumber)
 		if !va.Exist(regexTitle) && regexTitle != "" {
 			// 取得名字
 			var insert = mysql.VideoActresses{Title: regexTitle}
@@ -44,7 +45,7 @@ func CrawlerActressName() {
 		} else if regexTitle != "" {
 			fmt.Println("DB 有", regexTitle, "的資料")
 		} else {
-			fmt.Println("不符合影片檔名格式", video.Title)
+			fmt.Println("不符合影片檔名格式", videoNumber)
 		}
 	}
 }

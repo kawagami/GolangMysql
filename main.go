@@ -11,7 +11,8 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	crawler.CrawlerActressName()
+	path := `D:\`
+	crawler.CrawlerActressName(path)
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
