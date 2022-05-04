@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
-
 	"mods/crawler"
+	"time"
 )
 
 func main() {

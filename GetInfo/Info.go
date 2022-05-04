@@ -52,7 +52,7 @@ func GetFileNumberFromDir(path string) (response []string) {
 	if err != nil {
 		panic(err)
 	}
-	pattern := `^([a-zA-Z]{2,6}-[0-9]{2,6}).*(\..*)$`
+	pattern := `([a-zA-Z]{2,6}-[0-9]{2,6}).*(\..*)$`
 	re := regexp.MustCompile(pattern)
 	for _, fileName := range pathSlice {
 		if result := re.FindStringSubmatch(fileName); len(result) > 1 {

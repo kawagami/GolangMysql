@@ -2,7 +2,6 @@ package crawler
 
 import (
 	"fmt"
-	"regexp"
 	"time"
 
 	"mods/GetInfo"
@@ -10,26 +9,17 @@ import (
 )
 
 func CrawlerActressName(path string) {
-	// path := `C:\waitToArrange`
-	// path := `D:\`
+	// call 使用 regexp 過濾檔案名稱的方法
 	pathSlice := GetInfo.GetFileNumberFromDir(path)
-	// err := GetInfo.GetDir(path, &pathSlice)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// //
 	// 取得 DB 資料
 	var va mysql.VideoActresses
-	// regex
-	pattern := `^[a-zA-Z]{2,6}-[0-9]{2,6}`
-	re, _ := regexp.Compile(pattern)
 	//
-	for _, videoNumber := range pathSlice {
-		regexTitle := re.FindString(videoNumber)
-		if !va.Exist(regexTitle) && regexTitle != "" {
+	for index, videoNumber := range pathSlice {
+		fmt.Printf("進度 %v/%v\n", index+1, len(pathSlice))
+		if !va.Exist(videoNumber) && videoNumber != "" {
 			// 取得名字
-			var insert = mysql.VideoActresses{Title: regexTitle}
-			if actressName := GetActressName(regexTitle); actressName != "" {
+			var insert = mysql.VideoActresses{Title: videoNumber}
+			if actressName := GetActressName(videoNumber); actressName != "" {
 				// 建立要插入 DB的資料
 				insert.Actress = actressName
 				// 將資料寫入 DB
@@ -37,13 +27,16 @@ func CrawlerActressName(path string) {
 				insert.Actress = ""
 				fmt.Println("查無 actress name")
 			}
+			fmt.Println("寫入", videoNumber)
 			va.Insert(insert)
-			fmt.Println("寫入", regexTitle)
-			// 避免過度 request 被擋
-			fmt.Println("待機 5 秒")
-			time.Sleep(time.Second * 5)
-		} else if regexTitle != "" {
-			fmt.Println("DB 有", regexTitle, "的資料")
+			// 最後一個就不待機了
+			if index+1 < len(pathSlice) {
+				// 避免過度 request 被擋
+				fmt.Println("待機 5 秒")
+				time.Sleep(time.Second * 5)
+			}
+		} else if videoNumber != "" {
+			fmt.Println("DB 有", videoNumber, "的資料")
 		} else {
 			fmt.Println("不符合影片檔名格式", videoNumber)
 		}
