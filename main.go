@@ -10,8 +10,8 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	path := `D:\`
-	crawler.CrawlerActressName(path)
+	url := `https://news.cnyes.com/news/cat/headline`
+	crawler.GetNews(url)
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
