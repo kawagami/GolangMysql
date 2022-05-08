@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"mods/mysql"
+	"mods/crawler"
 	"time"
 )
 
@@ -10,16 +10,8 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	var va mysql.VideoActresses
-	data := va.Get()
-	count := 0
-	for _, fi := range data {
-		count++
-		fmt.Println(fi.Title)
-		fmt.Println(fi.Actress)
-		fmt.Println("")
-	}
-	fmt.Println(count)
+	url := `https://news.cnyes.com/news/cat/headline`
+	crawler.GetNews(url)
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
