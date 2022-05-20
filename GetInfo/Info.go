@@ -3,6 +3,7 @@ package GetInfo
 import (
 	"io/ioutil"
 	"log"
+	"mods/mysql"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -60,5 +61,38 @@ func GetFileNumberFromDir(path string) (response []string) {
 			// fmt.Printf("原檔案名 = %v\n番號 = %v\n檔案類型 = %v\n\n", result[0], result[1], result[2])
 		}
 	}
+	return
+}
+
+func GetFileDataFromDir(path string) (response []VideoCrawler) {
+	var pathSlice []string
+	err := GetDir(path, &pathSlice)
+	if err != nil {
+		panic(err)
+	}
+	pattern := `([a-zA-Z]{2,6}-[0-9]{2,6}).*(\..*)$`
+	re := regexp.MustCompile(pattern)
+	for _, fileName := range pathSlice {
+		if result := re.FindStringSubmatch(fileName); len(result) > 1 {
+			var vc VideoCrawler
+			vc.Title = result[1]
+			vc.Path = path + result[0]
+			response = append(response, vc)
+			// fmt.Printf("原檔案名 = %v\n番號 = %v\n檔案類型 = %v\n\n", result[0], result[1], result[2])
+		}
+	}
+	return
+}
+
+// 返回整理過的 sql 資料
+func GetSqlDataMap() (response map[string]string) {
+	var va mysql.VideoActresses
+	response = make(map[string]string)
+	for _, row := range va.Get() {
+		response[row.Title] = row.Actress
+	}
+	// for title, actress := range response {
+	// 	fmt.Printf("%10v\t%10v\n", title, actress)
+	// }
 	return
 }
