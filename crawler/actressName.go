@@ -8,6 +8,7 @@ import (
 	"mods/mysql"
 )
 
+// 套過 crawler 取得 input 路徑的影片資料
 func CrawlerActressName(path string) {
 	// call 使用 regexp 過濾檔案名稱的方法
 	pathSlice := GetInfo.GetFileNumberFromDir(path)
