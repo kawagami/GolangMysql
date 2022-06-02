@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"mods/tidy"
+	"mods/sqlGorm"
 	"time"
 )
 
@@ -10,9 +10,12 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	path := `E:\video\H\unArranged\`
-	destPath := `E:\video\H\true\`
-	tidy.TidyVideoByActressName(path, destPath, false)
+	db := sqlGorm.GetDb()
+	var vas []sqlGorm.VideoActress
+	db.Find(&vas)
+	for _, va := range vas {
+		fmt.Println(va)
+	}
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start
