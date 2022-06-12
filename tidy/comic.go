@@ -69,7 +69,11 @@ func TempComics() (res []Tidy) {
 	return
 }
 
-// 移動 temp 資料夾的壓縮檔到同作者名的資料夾下
+/*
+綜合使用 ComicAuthors() TempComics()
+完成整理 temp 資料夾的目標
+移動 temp 資料夾的壓縮檔到同作者名的資料夾下
+*/
 func MoveFileToDest() {
 	count := 0
 	authors := ComicAuthors()
