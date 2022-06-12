@@ -7,10 +7,26 @@ import (
 	"gorm.io/gorm"
 )
 
-type VideoActress struct {
-	gorm.Model
-	Title   string
-	Actress string
+// type VideoActress struct {
+// 	gorm.Model
+// 	Title   string
+// 	Actress string
+// }
+
+func GetOldDb() (db *gorm.DB) {
+	username := "root"
+	password := "root"
+	host := "127.0.0.1"
+	port := "3306"
+	// dbname := "gorm"
+	dbname := "arrange"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, dbname)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	return db
 }
 
 func GetDb() (db *gorm.DB) {
@@ -18,8 +34,8 @@ func GetDb() (db *gorm.DB) {
 	password := "root"
 	host := "127.0.0.1"
 	port := "3306"
-	// dbname := "gorm"
-	dbname := "arrange"
+	dbname := "gorm"
+	// dbname := "arrange"
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, dbname)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
