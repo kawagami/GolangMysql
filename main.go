@@ -10,21 +10,23 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	tidy.MoveFileToDest()
+	path := `D:\temp`
+	res := tidy.GetAuthorName(path)
+	// 紀錄所需的 map
+	var dataLen = len(res)
+	var data = make(map[string]string, dataLen)
 	//
-	// res := tidy.ComicAuthors()
-	// for _, t := range res {
-	// 	fmt.Println(t.Title)
-	// 	fmt.Println(t.Path)
-	// 	fmt.Println("")
-	// }
+	for _, tidy := range res {
+		data[tidy.Title] = tidy.Path
+	}
 	//
-	// temps := tidy.TempComics()
-	// for _, temp := range temps {
-	// 	fmt.Println(temp.Title)
-	// 	fmt.Println(temp.Path)
-	// 	fmt.Println("")
-	// }
+	for shouldBeAuthor, dataPath := range data {
+		fmt.Println(shouldBeAuthor)
+		fmt.Println(dataPath)
+		fmt.Println("")
+	}
+	//
+	fmt.Println("data len =", len(data))
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start

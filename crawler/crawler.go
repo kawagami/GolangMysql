@@ -11,6 +11,10 @@ const (
 	baseUrl = "https://javdb.com"
 )
 
+/*
+依照 input 的番號
+return 在 baseUrl 找到的第一個目標路徑
+*/
 func GetVideoInfo(videoName string) (result []string) {
 	c := colly.NewCollector() // 在colly中使用 Collector 這類物件 來做事情
 

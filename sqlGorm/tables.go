@@ -35,3 +35,14 @@ type Storage struct {
 	Name   string
 	Videos []Video
 }
+
+/*
+偷懶不拉關聯 一張表紀錄所有東西 2022-06-18
+*/
+type VideoMix struct {
+	gorm.Model
+	Title    string
+	Actress  string
+	CoverImg string
+	RawHtml  string
+}
