@@ -43,6 +43,8 @@ func GetAuthorName(path string) (res []Tidy) {
 	pattern := `(\[[^\[]*\])`
 	re := regexp.MustCompile(pattern)
 	//
+	var needToFilter = []string{"汉化", "漢化", "翻訳"}
+	//
 	for _, file := range files {
 		title := file.Name()
 		dPath := path + `\` + file.Name()
@@ -51,15 +53,10 @@ func GetAuthorName(path string) (res []Tidy) {
 			// 對 [][]string 做 for range
 			for _, ts := range find {
 				// 過濾包含特定關鍵字的資料
-				if strings.Contains(ts[1], "汉化") {
+				if IsStringSliceIncludeString(needToFilter, ts[1]) {
 					continue
 				}
-				if strings.Contains(ts[1], "漢化") {
-					continue
-				}
-				if strings.Contains(ts[1], "翻訳") {
-					continue
-				}
+				//
 				var data Tidy
 				data.Title = ts[1]
 				data.Path = dPath
@@ -69,4 +66,17 @@ func GetAuthorName(path string) (res []Tidy) {
 		//
 	}
 	return
+}
+
+/*
+檢查 []string 中的每個 string 是否存在於 inputString
+*/
+func IsStringSliceIncludeString(stringSlice []string, inputString string) bool {
+	for _, ss := range stringSlice {
+		// 檢查 inputString (regexp 抓出來的檔案名稱) 是否包含要過濾的字詞
+		if strings.Contains(inputString, ss) {
+			return true
+		}
+	}
+	return false
 }
