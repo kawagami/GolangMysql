@@ -9,7 +9,8 @@ import (
 
 // 取得 & 整理作者名 slice
 func ComicAuthors() (res []Tidy) {
-	path := `D:\comic\H\`
+	path := `C:\comic\H`
+	// path := `D:\comic\H\`
 	directories := GetFilesNameOfDir(path)
 	//
 	var tempAuthors []Tidy
