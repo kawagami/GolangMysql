@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 type VideoCrawler struct {
@@ -57,7 +58,11 @@ func GetFileNumberFromDir(path string) (response []string) {
 	re := regexp.MustCompile(pattern)
 	for _, fileName := range pathSlice {
 		if result := re.FindStringSubmatch(fileName); len(result) > 1 {
-			response = append(response, result[1])
+			// // 原本大小寫是怎樣就紀錄怎樣
+			// response = append(response, result[1])
+			// 英文轉成大寫
+			response = append(response, strings.ToUpper(result[1]))
+			//
 			// fmt.Printf("原檔案名 = %v\n番號 = %v\n檔案類型 = %v\n\n", result[0], result[1], result[2])
 		}
 	}
