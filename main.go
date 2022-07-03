@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"mods/tidy"
+	"mods/crawler"
+	"mods/sqlGorm"
+	"strings"
 	"time"
 )
 
@@ -10,23 +12,36 @@ func main() {
 	fmt.Println("")
 	start := time.Now().UnixMicro()
 	//
-	path := `D:\temp`
-	res := tidy.GetAuthorName(path)
-	// 紀錄所需的 map
-	var dataLen = len(res)
-	var data = make(map[string]string, dataLen)
+	// ------------------------------------
+	video := `https://javdb.com/v/gG1by`
+	result := crawler.GetVideoInnerInfo(video)
+	// 未處理字串s
+	// index := len(result.InfoStrings) - 1
+	// fmt.Println(result.InfoStrings[index])
+	// // 封面圖
+	// fmt.Println(result.Cover)
+	// // 原始檔案
+	// fmt.Println(len(result.RawHtml))
+	// ------------------------------------
 	//
-	for _, tidy := range res {
-		data[tidy.Title] = tidy.Path
+	// 取得 DB
+	db := sqlGorm.GetDb()
+	//
+	var model sqlGorm.VideoMix
+	// 取得名字
+	if len(result.InfoStrings) > 5 {
+		infoIndex := len(result.InfoStrings) - 1
+		res := strings.Split(result.InfoStrings[infoIndex], "♀")
+		// 清除左右的空白
+		model.Actress = strings.TrimSpace(res[0])
 	}
 	//
-	for shouldBeAuthor, dataPath := range data {
-		fmt.Println(shouldBeAuthor)
-		fmt.Println(dataPath)
-		fmt.Println("")
-	}
+	model.CoverImg = result.Cover
+	model.RawHtml = result.RawHtml
 	//
-	fmt.Println("data len =", len(data))
+	db.Create(&model)
+	// // Migrate the schema
+	// db.AutoMigrate(&sqlGorm.VideoMix{})
 	//
 	end := time.Now().UnixMicro()
 	timeResult := end - start

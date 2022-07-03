@@ -40,7 +40,8 @@ func GetVideoInfo(videoName string) (result []string) {
 	return
 }
 
-func GetVideoInnerInfo(path string) (result []string) {
+// func GetVideoInnerInfo(path string) (result InfoWebRawData) {
+func GetVideoInnerInfo(path string) (result InfoWebRawData) {
 	c := colly.NewCollector() // 在colly中使用 Collector 這類物件 來做事情
 
 	// c.OnResponse(func(r *colly.Response) { // 當Visit訪問網頁後，網頁響應(Response)時候執行的事情
@@ -52,9 +53,24 @@ func GetVideoInnerInfo(path string) (result []string) {
 	// 	fmt.Println(e.Text)
 	// })
 
+	// 內頁的一欄一欄資訊集合體
 	c.OnHTML("span.value", func(e *colly.HTMLElement) {
 		// fmt.Println(e.Text)
-		result = append(result, e.Text)
+		result.InfoStrings = append(result.InfoStrings, e.Text)
+	})
+
+	// 封面圖
+	c.OnHTML(".video-cover", func(e *colly.HTMLElement) {
+		// fmt.Println(e.Attr("src"))
+		// fmt.Println(e.Text)
+		result.Cover = e.Attr("src")
+		// result.RawHtml = e
+	})
+
+	// 原始資料
+	c.OnResponse(func(r *colly.Response) { // 當Visit訪問網頁後，網頁響應(Response)時候執行的事情
+		// fmt.Println(string(r.Body)) // 返回的Response物件r.Body 是[]Byte格式，要再轉成字串
+		result.RawHtml = string(r.Body)
 	})
 
 	c.OnRequest(func(r *colly.Request) { // iT邦幫忙需要寫這一段 User-Agent才給爬
@@ -70,11 +86,11 @@ func GetActressName(fileTitle string) (actressName string) {
 	paths := GetVideoInfo(fileTitle)
 	if len(paths) > 1 {
 		// 爬第二層
-		datas := GetVideoInnerInfo(paths[0])
+		rawData := GetVideoInnerInfo(paths[0])
 		// 取得沒特定標籤可鎖定的資料並整理
-		if len(datas) > 5 {
-			infoIndex := len(datas) - 1
-			res := strings.Split(datas[infoIndex], "♀")
+		if len(rawData.InfoStrings) > 5 {
+			infoIndex := len(rawData.InfoStrings) - 1
+			res := strings.Split(rawData.InfoStrings[infoIndex], "♀")
 			// 清除左右的空白
 			aName := strings.TrimSpace(res[0])
 			actressName = aName
