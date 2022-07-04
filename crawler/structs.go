@@ -10,6 +10,7 @@ import (
 type InfoWebRawData struct {
 	gorm.Model
 	InfoStrings []string
+	LongTitle   string
 	Cover       string
 	RawHtml     string
 }

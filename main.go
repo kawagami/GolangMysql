@@ -11,7 +11,7 @@ func main() {
 	start := time.Now().UnixMicro()
 	//
 	// ------------------------------------
-	crawler.CrawlerActressNameGormVersion(`D:\`)
+	crawler.CrawlerActressNameGormVersion(`C:\waitToArrange`)
 	// // ------------------------------------
 	//
 	end := time.Now().UnixMicro()

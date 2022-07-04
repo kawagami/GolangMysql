@@ -41,8 +41,9 @@ type Storage struct {
 */
 type VideoMix struct {
 	gorm.Model
-	Title    string
-	Actress  string
-	CoverImg string
-	RawHtml  string
+	Title     string
+	LongTitle string
+	Actress   string
+	CoverImg  string
+	RawHtml   string
 }

@@ -73,6 +73,14 @@ func GetVideoInnerInfo(path string) (result InfoWebRawData) {
 		result.RawHtml = string(r.Body)
 	})
 
+	// 包含日文字的標題
+	c.OnHTML("h2.title", func(e *colly.HTMLElement) {
+		// fmt.Println(e.Attr("src"))
+		// fmt.Println(e.Text)
+		result.LongTitle = strings.TrimSpace(e.Text)
+		// result.RawHtml = e
+	})
+
 	c.OnRequest(func(r *colly.Request) { // iT邦幫忙需要寫這一段 User-Agent才給爬
 		r.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36")
 	})

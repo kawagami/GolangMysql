@@ -134,6 +134,8 @@ func crawleredData(number string) (model sqlGorm.VideoMix) {
 	model.CoverImg = result.Cover
 	// 原始資料
 	model.RawHtml = result.RawHtml
+	// 含日文的長標題
+	model.LongTitle = result.LongTitle
 	//
 	return
 }
