@@ -8,6 +8,8 @@ import (
 	"mods/GetInfo"
 	"mods/mysql"
 	"mods/sqlGorm"
+
+	"gorm.io/gorm"
 )
 
 /*
@@ -55,15 +57,18 @@ path 是要查詢的資料夾路徑
 func CrawlerActressNameGormVersion(path string) {
 	// call 使用 regexp 過濾檔案名稱的方法
 	pathSlice := GetInfo.GetFileNumberFromDir(path)
+	// // 取得 DB 連線
+	// db := sqlGorm.GetDb()
+	// 取得 sail 用的 DB 連線
+	db := sqlGorm.GetSailDb()
+	// defer db.Close()
 	//
 	for index, videoNumber := range pathSlice {
 		fmt.Printf("進度 %v/%v\n", index+1, len(pathSlice))
 		// 檢查資料庫是否已經存在
-		if !IsTitleExists(videoNumber) && videoNumber != "" {
+		if !IsTitleExists(videoNumber, db) && videoNumber != "" {
 			// 爬蟲後有資料的話
 			if data := crawleredData(videoNumber); data.Title != "" {
-				// 取得 DB 連線
-				db := sqlGorm.GetDb()
 				// 將資料寫入 DB
 				fmt.Println("寫入", videoNumber)
 				db.Create(&data)
@@ -87,8 +92,11 @@ func CrawlerActressNameGormVersion(path string) {
 /*
 檢查 title 在資料庫內是否已經存在
 */
-func IsTitleExists(title string) (result bool) {
-	db := sqlGorm.GetDb()
+func IsTitleExists(title string, db *gorm.DB) (result bool) {
+	// // 取得 DB 連線
+	// db := sqlGorm.GetDb()
+	// 取得 sail 用的 DB 連線
+	// db := sqlGorm.GetSailDb()
 	var model sqlGorm.VideoMix
 	var exists bool
 	db.Model(model).
@@ -133,7 +141,8 @@ func crawleredData(number string) (model sqlGorm.VideoMix) {
 	// 封面圖
 	model.CoverImg = result.Cover
 	// 原始資料
-	model.RawHtml = result.RawHtml
+	// model.RawHtml = result.RawHtml
+	model.RawHtml = "strings too long, pause"
 	// 含日文的長標題
 	model.LongTitle = result.LongTitle
 	//

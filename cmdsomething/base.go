@@ -32,9 +32,9 @@ func Ofvs() {
 func WebInfoWithCopy() {
 	text, _ := cb.ReadAll()
 	cmd := "cmd"
-	web1String := fmt.Sprintf("http://www.wnacg.org/search/?q=%s&f=_all&s=create_time_DESC&syn=yes", text)
 	web2String := fmt.Sprintf("https://e-hentai.org/?f_search=%s", text)
 	web3String := fmt.Sprintf("https://nhentai.net/search/?q=%s", text)
+	web1String := fmt.Sprintf("http://www.wnacg.org/search/?q=%s&f=_all&s=create_time_DESC&syn=yes", text)
 	web1 := []string{"/c", "start", web1String}
 	web2 := []string{"/c", "start", web2String}
 	web3 := []string{"/c", "start", web3String}

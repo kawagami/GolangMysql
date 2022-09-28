@@ -2,6 +2,7 @@ package tidy
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -9,7 +10,7 @@ import (
 
 // 取得 & 整理作者名 slice
 func ComicAuthors() (res []Tidy) {
-	path := `C:\comic\H`
+	path := `C:\comic\H\`
 	// path := `D:\comic\H\`
 	directories := GetFilesNameOfDir(path)
 	//
@@ -98,7 +99,10 @@ func MoveFileToDest() {
 					fmt.Println(needCheckFileExist)
 					fmt.Println(comicPathIsFile)
 					fmt.Println("")
-					os.Rename(comic.Path, needCheckFileExist)
+					// 這個好像不能在不同硬碟間移動檔案
+					// os.Rename(comic.Path, needCheckFileExist)
+					// 網路上找到的不同硬碟間移動檔案的範例
+					MoveFileInDiffDrive(comic.Path, needCheckFileExist)
 				} else {
 					fmt.Println("檔案已經存在", needCheckFileExist)
 					fmt.Println("")
@@ -107,4 +111,29 @@ func MoveFileToDest() {
 		}
 	}
 	fmt.Println(count)
+}
+
+// 可在不同硬碟間移動檔案
+func MoveFileInDiffDrive(sourcePath, destPath string) error {
+	inputFile, err := os.Open(sourcePath)
+	if err != nil {
+		return fmt.Errorf("couldn't open source file: %s", err)
+	}
+	outputFile, err := os.Create(destPath)
+	if err != nil {
+		inputFile.Close()
+		return fmt.Errorf("couldn't open dest file: %s", err)
+	}
+	defer outputFile.Close()
+	_, err = io.Copy(outputFile, inputFile)
+	inputFile.Close()
+	if err != nil {
+		return fmt.Errorf("writing to output file failed: %s", err)
+	}
+	// The copy was successful, so now delete the original file
+	err = os.Remove(sourcePath)
+	if err != nil {
+		return fmt.Errorf("failed removing original file: %s", err)
+	}
+	return nil
 }

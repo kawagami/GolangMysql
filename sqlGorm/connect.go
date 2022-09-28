@@ -13,6 +13,23 @@ import (
 // 	Actress string
 // }
 
+// 結合 laravel 一起使用時用的 DB
+func GetSailDb() (db *gorm.DB) {
+	username := "sail"
+	password := "password"
+	host := "127.0.0.1"
+	port := "3306"
+	dbname := "crawler_combine_laravel"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, dbname)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	//
+	return db
+}
+
+// 最一開始使用的 DB
 func GetOldDb() (db *gorm.DB) {
 	username := "root"
 	password := "root"
@@ -29,6 +46,7 @@ func GetOldDb() (db *gorm.DB) {
 	return db
 }
 
+// 重寫成 gorm 版本時用的 DB
 func GetDb() (db *gorm.DB) {
 	username := "root"
 	password := "root"
